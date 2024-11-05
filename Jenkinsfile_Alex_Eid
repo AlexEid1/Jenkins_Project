@@ -19,7 +19,7 @@ pipeline {
         stage('Lint') {
             steps {
                 script {
-                    bat "source ${VIRTUAL_ENV}/bin/activate && flake8 app.py"
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && flake8 app.py"
                 }
             }
         }
@@ -27,9 +27,9 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    bat "source ${VIRTUAL_ENV}/bin/activate && pytest"
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && pytest"
                 }
-                }
+            }
         }
 
         stage('Deploy') {
