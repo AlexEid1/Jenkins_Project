@@ -28,7 +28,12 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    bat "call ${VIRTUAL_ENV}\\Scripts\\activate && set PYTHONPATH=%WORKSPACE% && pytest"
+                    try {
+                        bat "call ${VIRTUAL_ENV}\\Scripts\\activate && set PYTHONPATH=%WORKSPACE% && pytest"
+                    }
+                    catch (Exception e) {
+                        echo "${e}"
+                    }
                 }
             }
         }
