@@ -11,7 +11,7 @@ pipeline {
                     if (!fileExists("${env.WORKSPACE}/${VIRTUAL_ENV}")) {
                         bat "python -m venv ${VIRTUAL_ENV}"
                     }
-                bat "${VIRTUAL_ENV}\\Scripts\\activate && pip install -r requirements.txt"
+                bat "call ${VIRTUAL_ENV}\\Scripts\\activate && pip install -r requirements.txt"
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Lint') {
             steps {
                 script {
-                    bat "${VIRTUAL_ENV}\\Scripts\\activate && flake8 app.py"
+                    bat "call ${VIRTUAL_ENV}\\Scripts\\activate && flake8 app.py"
                 }
             }
         }
@@ -35,8 +35,8 @@ pipeline {
         stage('Coverage') {
             steps {
                 script {
-                    sh "${VIRTUAL_ENV}\\Scripts\\activate && coverage run -m unittest discover -s tests"
-                    sh "${VIRTUAL_ENV}\\Scripts\\activate && coverage report"
+                    bat "call ${VIRTUAL_ENV}\\Scripts\\activate && coverage run -m unittest discover -s tests"
+                    bat "call ${VIRTUAL_ENV}\\Scripts\\activate && coverage report"
                 }
             }
         }
@@ -44,7 +44,7 @@ pipeline {
         stage('Security Scan') {
             steps {
                 script {
-                    sh "${VIRTUAL_ENV}\\Scripts\\activate && bandit -r ."
+                    bat "call ${VIRTUAL_ENV}\\Scripts\\activate && bandit -r ."
                 }
             }
         }
@@ -52,13 +52,15 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                script {
-                    // Deployment logic, e.g., pushing to a remote server
-                    echo "Deploying application..."
+                sshagent(credentials: ['1']) {
+                    script {
+                        bat "call scp -o StrictHostKeyChecking=no -P 22 -r * alexe@192.168.1.134:/Deployment"
+                        bat "call ssh -o StrictHostKeyChecking=no -p 22 user@192.168.1.134 'bash /Deployment/deploy.sh'"
+                    }
                 }
             }
         }
-    }
+
 
     post {
         always {
