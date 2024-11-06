@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         VIRTUAL_ENV = 'venv'
+        PYTHONIOENCODING = 'utf-8'
     }
 
     stages {
