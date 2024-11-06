@@ -49,7 +49,6 @@ pipeline {
             }
         }
 
-
         stage('Deploy') {
             steps {
                 sshagent(credentials: ['1']) {
@@ -60,12 +59,11 @@ pipeline {
                 }
             }
         }
+    }
 
-
-        post {
-            always {
-                cleanWs()
-            }
+    post {
+        always {
+            cleanWs()
         }
     }
 }
