@@ -62,7 +62,7 @@ pipeline {
                     echo "Deploying application..."
                     def remoteHost = "192.168.1.121"
                     def remoteUser = "alexe"
-                    def privateKeyPath = "C:\Users\alexe\OneDrive\Desktop\UNI\10_Fall 2023-2024\EECE 435L\AlexEid_Lab10\id_rsa"
+                    def privateKeyPath = "\\AlexEid_Lab10\\id_rsa"
                     try {
                         bat """
                             ssh -i ${privateKeyPath} ${remoteUser}@${remoteHost} 'cd /deploy && python app.py'
