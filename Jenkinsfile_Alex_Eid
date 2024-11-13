@@ -58,10 +58,17 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sshagent(credentials: ['1']) {
-                    script {
-                        bat "call scp -o StrictHostKeyChecking=no -P 22 -r * alexe@192.168.1.134:/Deployment"
-                        bat "call ssh -o StrictHostKeyChecking=no -p 22 user@192.168.1.134 'bash /Deployment/deploy.sh'"
+                script {
+                    echo "Deploying application..."
+                    def remoteHost = "192.168.1.121"
+                    def remoteUser = "alexe"
+                    def privateKeyPath = "C:\Users\alexe\OneDrive\Desktop\UNI\10_Fall 2023-2024\EECE 435L\AlexEid_Lab10\id_rsa"
+                    try {
+                        bat """
+                            ssh -i ${privateKeyPath} ${remoteUser}@${remoteHost} 'cd /deploy && python app.py'
+                        """
+                    } catch (Exception e) {
+                        echo "Deployment failed: ${e}"
                     }
                 }
             }
